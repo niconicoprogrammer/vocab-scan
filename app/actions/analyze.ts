@@ -28,21 +28,37 @@ const responseSchema = {
 // --- helpers ---
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-function sanitize(raw: any): Pair[] {
-  return Array.isArray(raw)
-    ? raw
-        .filter((r) => r && typeof r.word === "string" && typeof r.meaning === "string")
-        .map((r) => ({ word: r.word.trim(), meaning: r.meaning.trim() }))
-    : [];
+// 型ガードたち
+const isRecord = (v: unknown): v is Record<string, unknown> =>
+  typeof v === "object" && v !== null;
+
+const isString = (v: unknown): v is string => typeof v === "string";
+
+type RawPair = { word?: unknown; meaning?: unknown };
+const isRawPair = (v: unknown): v is RawPair =>
+  isRecord(v) && "word" in v && "meaning" in v;
+
+function sanitize(raw: unknown): Pair[] {
+  if (!Array.isArray(raw)) return [];
+  const out: Pair[] = [];
+  for (const r of raw) {
+    if (isRawPair(r) && isString(r.word) && isString(r.meaning)) {
+      out.push({ word: r.word.trim(), meaning: r.meaning.trim() });
+    }
+  }
+  return out;
 }
 
 function tryParseArray(text: string): Pair[] {
   try {
-    return sanitize(JSON.parse(text));
+    // JSON.parse の戻りは unknown 扱い → sanitize で絞る
+    return sanitize(JSON.parse(text) as unknown);
   } catch {
     const m = text.match(/\[[\s\S]*\]/); // 配列リテラルだけ抜くフォールバック
     if (m) {
-      try { return sanitize(JSON.parse(m[0])); } catch {}
+      try {
+        return sanitize(JSON.parse(m[0]) as unknown);
+      } catch {}
     }
     return [];
   }
@@ -53,6 +69,38 @@ async function fileToInline(file: File) {
     mimeType: file.type || (file.name.endsWith(".jpg") ? "image/jpeg" : "image/png"),
     base64: Buffer.from(await file.arrayBuffer()).toString("base64"),
   };
+}
+
+// usageMetadata を安全に取り出す（存在すればログする）
+type GenAIUsage = {
+  promptTokenCount?: number;
+  totalTokenCount?: number;
+  candidatesTokenCount?: number;
+};
+function getUsage(x: unknown): GenAIUsage | undefined {
+  if (!isRecord(x)) return;
+  const maybe = (x as { usageMetadata?: unknown }).usageMetadata;
+  if (isRecord(maybe)) {
+    return {
+      promptTokenCount: typeof maybe.promptTokenCount === "number" ? maybe.promptTokenCount : undefined,
+      totalTokenCount: typeof maybe.totalTokenCount === "number" ? maybe.totalTokenCount : undefined,
+      candidatesTokenCount: typeof maybe.candidatesTokenCount === "number" ? maybe.candidatesTokenCount : undefined,
+    };
+  }
+  return;
+}
+
+// parts から text を抽出（型不明に強い）
+function partsToText(parts: unknown): string {
+  if (!Array.isArray(parts)) return "";
+  const texts: string[] = [];
+  for (const p of parts) {
+    const t = (isRecord(p) && isString((p as { text?: unknown }).text))
+      ? (p as { text: string }).text
+      : "";
+    if (t) texts.push(t);
+  }
+  return texts.join("");
 }
 
 // --- 本体：最初から1枚ずつ処理 ---
@@ -91,18 +139,16 @@ export async function analyzeAction(_prev: State, formData: FormData): Promise<S
 
     // 参考ログ
     const finish = resp.candidates?.[0]?.finishReason;
+    const usage = getUsage(resp);
     console.log("[analyze:single] file:", f.name, {
       model: resp.modelVersion,
       finishReason: finish,
-      usage: (resp as any).usageMetadata, // promptTokenCount / totalTokenCount など
+      usage,
     });
 
     const text =
       resp.text ??
-      (resp.candidates?.[0]?.content?.parts || [])
-        .map((p: any) => p?.text)
-        .filter(Boolean)
-        .join("");
+      partsToText(resp.candidates?.[0]?.content?.parts ?? []);
 
     if (!text) {
       // その画像はスキップ（全滅したら最後にエラー）
