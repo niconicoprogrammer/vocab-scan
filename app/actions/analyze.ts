@@ -1,5 +1,5 @@
-// app/actions/analyze.ts
 "use server";
+
 import { Type } from "@google/genai";
 import { ai } from "@/app/lib/gemini";
 import type { Pair } from "@/app/types/types";

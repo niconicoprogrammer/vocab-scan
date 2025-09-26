@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 
 import { useCallback, useMemo, useRef, useState, useActionState, startTransition } from "react";
@@ -160,7 +159,7 @@ export default function Home() {
   return (
     <Stack spacing={3}>
       {/* 見出し／説明 */}
-      <Typography variant="h5" fontWeight={800} >
+      <Typography variant="h5" fontWeight={800}>
         画像ファイル選択（複数可 & 並び替え対応）
       </Typography>
       <Typography variant="body1" color="text.secondary" gutterBottom>

@@ -1,4 +1,3 @@
-// app/reader/page.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -193,53 +192,55 @@ export default function ReaderPage() {
     // ========= 画面 =========
     return (
         <Stack spacing={3}>
-            <Card>
+            {/* 見出し／説明 */}
+            <Typography variant="h5" fontWeight={800}>
+                TSV読み上げ
+            </Typography>
+            {/* 読み上げ機能カード */}
+            <Card variant="outlined">
+                {/* <CardHeader title="読み上げ" /> */}
                 <CardContent>
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid size={{ xs: 12, md: 4 }}>
-                            <Stack direction="row" spacing={1}>
-                                <Button
-                                    variant="contained"
-                                    startIcon={<PlayArrow />}
-                                    onClick={handlePlay}
-                                    disabled={rows.length === 0 || playing}
-                                >
-                                    再生
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<Pause />}
-                                    onClick={handlePause}
-                                    disabled={!playing}
-                                >
-                                    一時<br></br>停止
-                                </Button>
-                                <Button
-                                    variant="text"
-                                    startIcon={<Stop />}
-                                    onClick={handleStop}
-                                    disabled={!playing && current < 0}
-                                >
-                                    停止
-                                </Button>
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Card>
+                    <Stack spacing={2}>
+                        {/* ボタン群 */}
+                        <Stack direction="row" spacing={1}>
+                            <Button
+                                variant="contained"
+                                startIcon={<PlayArrow />}
+                                onClick={handlePlay}
+                                disabled={rows.length === 0 || playing}
+                            >
+                                再生
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                startIcon={<Pause />}
+                                onClick={handlePause}
+                                disabled={!playing}
+                            >
+                                一時停止
+                            </Button>
+                            <Button
+                                variant="text"
+                                startIcon={<Stop />}
+                                onClick={handleStop}
+                                disabled={!playing && current < 0}
+                            >
+                                停止
+                            </Button>
+                        </Stack>
 
-            <Card>
-                <CardContent>
-                    <Stack spacing={1}>
-                        <Typography variant="body2" color="text.secondary">
-                            進捗：{current >= 0 ? current + 1 : 0} / {total}
-                        </Typography>
-                        <LinearProgress variant="determinate" value={progress} />
-                        <Typography variant="caption" color="text.secondary">
-                            {current >= 0 && rows[current]
-                                ? (rows[current].word + ', ' + rows[current].meaning)
-                                : "—"}
-                        </Typography>
+                        {/* 進捗表示 */}
+                        <Stack spacing={1}>
+                            <Typography variant="body2" color="text.secondary">
+                                進捗：{current >= 0 ? current + 1 : 0} / {total}
+                            </Typography>
+                            <LinearProgress variant="determinate" value={progress} />
+                            <Typography variant="caption" color="text.secondary">
+                                {current >= 0 && rows[current]
+                                    ? `${rows[current].word} — ${rows[current].meaning}`
+                                    : "—"}
+                            </Typography>
+                        </Stack>
                     </Stack>
                 </CardContent>
             </Card>
