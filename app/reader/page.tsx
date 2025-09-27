@@ -307,7 +307,7 @@ export default function ReaderPage() {
                                 <Button variant="text" onClick={() => setTsv("")}>クリア</Button>
                             </Stack>
 
-                            <Divider sx={{ my: 2 }} />
+                            {/* <Divider sx={{ my: 2 }} />
 
                             <TextField
                                 label="Googleシート公開CSV URL（任意）"
@@ -318,7 +318,7 @@ export default function ReaderPage() {
                             />
                             <Typography variant="caption" color="text.secondary">
                                 ※ ここでは見た目だけ。取得処理は後で実装。
-                            </Typography>
+                            </Typography> */}
                         </CardContent>
                     </Card>
                 </Grid>
