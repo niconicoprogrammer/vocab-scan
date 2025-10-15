@@ -9,8 +9,8 @@ import {
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { analyzeAction, type State } from "@/app/actions/analyze";
-import { type Pair } from "@/app/types/types";
+import { analyzeAction } from "@/app/actions";
+import { Pair, AnalyzeResult} from "@/app/types/types";
 
 /**
  * 画像（複数）を選択/ドラッグ&ドロップ → 並び替え → サーバーアクションで解析
@@ -137,7 +137,7 @@ export default function Home() {
    * - analyzeAction: 画像を受け取り OCR/解析し、Pair[] を返す想定
    * - state.ok が true なら解析成功、state.data に結果（Pair[]）
    */
-  const [state, formAction, pending] = useActionState<State, FormData>(
+  const [state, formAction, pending] = useActionState<AnalyzeResult, FormData>(
     analyzeAction,
     { ok: false, error: "" }
   );

@@ -1,10 +1,10 @@
-// app/wordbooks/[id]/page.tsx
 import { notFound, redirect } from "next/navigation";
 import { Box, Stack, Typography, Divider, Button } from "@mui/material";
 import Link from "next/link";
-import { createClient } from "@/app/utils/supabase/server";
-import TsvEditor, { Word } from "@/app/wordbooks/[id]/tsv-editor";
-import BreadcrumbsNav from "@/app/components/BreadcrumbsNav";
+import { createClient } from "@/app/lib/supabase/server";
+import Client from "@/app/wordbooks/[id]/page_client";
+import { BreadcrumbsNavClientOnly } from "@/app/components/breadcrumbs-nav";
+import { Word } from "@/app/types/types";
 
 type PageProps = { params: { id: string } };
 
@@ -21,7 +21,7 @@ export default async function WordbookDetailPage({ params }: PageProps) {
     // 自分の単語帳だけ取得（owner_id で縛る）
     const { data: book, error: bookErr } = await supabase
         .from("wordbooks")
-        .select("id, title, created_at, owner_id") // visibility は今回は不要
+        .select("id, title, created_at, owner_id")
         .eq("id", bookId)
         .eq("owner_id", user.id)
         .maybeSingle();
@@ -46,10 +46,10 @@ export default async function WordbookDetailPage({ params }: PageProps) {
 
     return (
         <>
-            <BreadcrumbsNav
+            <BreadcrumbsNavClientOnly
                 items={[
                     { label: "単語帳一覧", href: "/wordbooks" },
-                    { label: book.title } // 末尾はリンクなし=現在地
+                    { label: book.title }
                 ]}
             />
             <Box sx={{ p: 3 }}>
@@ -65,7 +65,7 @@ export default async function WordbookDetailPage({ params }: PageProps) {
 
                 <Divider sx={{ mb: 2 }} />
 
-                <TsvEditor bookId={book.id} initialWords={words} />
+                <Client bookId={book.id} initialWords={words} />
             </Box>
         </>
     );

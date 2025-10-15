@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AppTheme from "@/app/components/AppTheme";
-import { createClient } from "@/app/utils/supabase/server";
+import { createClient } from "@/app/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "VocabScan MVP",

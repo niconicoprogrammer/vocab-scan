@@ -1,8 +1,7 @@
-// app/wordbooks/page.tsx
-import { createClient } from '@/app/utils/supabase/server';
+import { createClient } from '@/app/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import WordbooksClient from '@/app/wordbooks/WordbooksClient';
-import BreadcrumbsNav from "@/app/components/BreadcrumbsNav";
+import Client from '@/app/wordbooks/page_client';
+import { BreadcrumbsNavClientOnly } from "@/app/components/breadcrumbs-nav";
 
 type Book = { id: number; title: string; visibility: 'private'|'public'; created_at: string };
 
@@ -23,7 +22,7 @@ export default async function WordbooksPage() {
     .order('created_at', { ascending: false });
 
     // ...取得後
-    const raw = selectData ?? [];                 // null を配列に
+    const raw = selectData ?? [];
     const books: Book[] = raw.map(b => ({
     id: Number(b.id),
     title: String(b.title),
@@ -33,8 +32,8 @@ export default async function WordbooksPage() {
 
   return (
     <>
-      <BreadcrumbsNav items={[{ label: "単語帳一覧" }]} />
-      <WordbooksClient initialBooks={books} />
+      <BreadcrumbsNavClientOnly items={[{ label: "単語帳一覧" }]} />
+      <Client initialBooks={books} />
     </>
   );
 }

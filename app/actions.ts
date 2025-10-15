@@ -1,15 +1,11 @@
 "use server";
 
 import { Type } from "@google/genai";
-import { ai } from "@/app/lib/gemini";
-import type { Pair } from "@/app/types/types";
-
-export type State =
-  | { ok: false; error: string }
-  | { ok: true; data: Pair[] };
+import { ai } from "@/app/lib/gemini/gemini";
+import type { Pair, AnalyzeResult } from "@/app/types/types";
 
 // --- 設定（必要なら .env で上書き可） ---
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5";
 const MAX_OUTPUT_TOKENS = Number(process.env.GEMINI_MAX_OUTPUT_TOKENS ?? 8192);
 const MAX_PAIRS_PER_IMAGE = Number(process.env.MAX_PAIRS_PER_IMAGE ?? 30);
 
@@ -104,7 +100,7 @@ function partsToText(parts: unknown): string {
 }
 
 // --- 本体：最初から1枚ずつ処理 ---
-export async function analyzeAction(_prev: State, formData: FormData): Promise<State> {
+export async function analyzeAction(_prev: AnalyzeResult, formData: FormData): Promise<AnalyzeResult> {
   const files = formData.getAll("files") as File[];
   if (!files?.length) return { ok: false, error: "画像がありません" } as const;
 

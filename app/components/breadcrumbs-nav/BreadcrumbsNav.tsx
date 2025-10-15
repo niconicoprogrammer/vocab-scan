@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { Breadcrumbs, Typography } from "@mui/material";
+import { BreadcrumbsItem } from "@/app/types/types";
 
-type Item = { label: string; href?: string };
-
-export default function BreadcrumbsNav({ items }: { items: Item[] }) {
+export default function BreadcrumbsNav({ items }: { items: BreadcrumbsItem[] }) {
   return (
     <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
       {items.map((it, i) =>

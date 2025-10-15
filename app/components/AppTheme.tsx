@@ -1,5 +1,6 @@
 'use client'
 
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -8,7 +9,7 @@ import {
 } from "@mui/material";
 import { signOut } from '@/app/login/actions'
 
-const theme = createTheme({ palette: { mode: "light" } });
+const theme = createTheme({ palette: { mode: "dark" } });
 
 function LinkTab(props: { label: string; href: string; value: string }) {
   const { label, href, value } = props;
@@ -22,62 +23,64 @@ export default function AppTheme({
   children: React.ReactNode;
   initialEmail: string | null;
 }) {
-const pathname = usePathname();
-const current =
-  pathname.startsWith("/reader") ? "/reader" :
-  pathname.startsWith("/wordbooks") ? "/wordbooks" :
-  pathname === "/" ? "/" :
-  false; // ← /login などは何も選択しない
+  const pathname = usePathname();
+  const current =
+    pathname.startsWith("/reader") ? "/reader" :
+      pathname.startsWith("/wordbooks") ? "/wordbooks" :
+        pathname === "/" ? "/" :
+          false;
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <AppRouterCacheProvider options={{ key: "mui" }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
 
-      {/* ヘッダー */}
-      <AppBar position="static" color="default" elevation={0}>
-        <Toolbar sx={{ gap: 2 }}>
-          {/* 左：タイトル */}
-          <Typography variant="h6" sx={{ fontWeight: 800 }}>
-            VocabScan
-          </Typography>
+        {/* ヘッダー */}
+        <AppBar position="static" color="default" elevation={0}>
+          <Toolbar sx={{ gap: 2 }}>
+            {/* 左：タイトル */}
+            <Typography variant="h6" sx={{ fontWeight: 800 }}>
+              VocabScan
+            </Typography>
 
-          {/* 中央：タブ */}
-          <Tabs value={current} textColor="primary" indicatorColor="primary" sx={{ ml: 2 }}>
-            <LinkTab label="解析" href="/" value="/" />
-            <LinkTab label="読み上げ" href="/reader" value="/reader" />
-            <LinkTab label="単語帳" href="/wordbooks" value="/wordbooks" />
-          </Tabs>
+            {/* 中央：タブ */}
+            <Tabs value={current} textColor="primary" indicatorColor="primary" sx={{ ml: 2 }}>
+              <LinkTab label="解析" href="/" value="/" />
+              <LinkTab label="読み上げ" href="/reader" value="/reader" />
+              <LinkTab label="単語帳" href="/wordbooks" value="/wordbooks" />
+            </Tabs>
 
-          {/* 右：スペーサー */}
-          <Box sx={{ flex: 1 }} />
+            {/* 右：スペーサー */}
+            <Box sx={{ flex: 1 }} />
 
-          {/* 右：ログイン情報／ログアウト or ログインへ */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {initialEmail ? (
-              <>
-                <Typography variant="body2" component="span">{initialEmail}</Typography>
-                <Button onClick={signOut} variant="outlined" size="small" sx={{ textTransform: "none" }}>
-                  ログアウト
+            {/* 右：ログイン情報／ログアウト or ログインへ */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {initialEmail ? (
+                <>
+                  <Typography variant="body2" component="span">{initialEmail}</Typography>
+                  <Button onClick={signOut} variant="outlined" size="small" sx={{ textTransform: "none" }}>
+                    ログアウト
+                  </Button>
+                </>
+              ) : (
+                <Button component={Link} href="/login" variant="contained" size="small" sx={{ textTransform: "none" }}>
+                  ログイン
                 </Button>
-              </>
-            ) : (
-              <Button component={Link} href="/login" variant="contained" size="small" sx={{ textTransform: "none" }}>
-                ログイン
-              </Button>
-            )}
-          </Box>
-        </Toolbar>
-      </AppBar>
+              )}
+            </Box>
+          </Toolbar>
+        </AppBar>
 
-      {/* コンテンツ */}
-      <Container maxWidth="md" sx={{ py: 4 }}>
-        {children}
-      </Container>
+        {/* コンテンツ */}
+        <Container maxWidth="md" sx={{ py: 4 }}>
+          {children}
+        </Container>
 
-      {/* フッター */}
-      <Box component="footer" sx={{ py: 6, textAlign: "center", color: "text.secondary" }}>
-        © {new Date().getFullYear()} VocabScan
-      </Box>
-    </ThemeProvider>
+        {/* フッター */}
+        <Box component="footer" sx={{ py: 6, textAlign: "center", color: "text.secondary" }}>
+          © {new Date().getFullYear()} VocabScan
+        </Box>
+      </ThemeProvider>
+    </AppRouterCacheProvider>
   );
 }

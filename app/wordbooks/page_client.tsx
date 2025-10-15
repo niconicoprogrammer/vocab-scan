@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import {
   Box, Stack, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, RadioGroup, FormControlLabel, Radio, Alert,
-  Table, TableHead, TableRow, TableCell, TableBody, IconButton
+  TextField, Alert, Table, TableHead, TableRow, TableCell, TableBody, IconButton
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,11 +12,10 @@ import { createWordbook, deleteWordbook, updateWordbook } from '@/app/wordbooks/
 
 type Book = { id: number; title: string; created_at: string };
 
-export default function WordbooksClient({ initialBooks }: { initialBooks: Book[] }) {
+export default function Client({ initialBooks }: { initialBooks: Book[] }) {
   // 新規作成
   const [openNew, setOpenNew] = useState(false);
   const [title, setTitle] = useState('');
-  const [visibility, setVisibility] = useState<'private'|'public'>('private');
 
   // 編集
   const [editId, setEditId] = useState<number | null>(null);
