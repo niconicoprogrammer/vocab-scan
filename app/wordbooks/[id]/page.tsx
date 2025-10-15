@@ -6,15 +6,15 @@ import Client from "@/app/wordbooks/[id]/page_client";
 import { BreadcrumbsNavClientOnly } from "@/app/components/breadcrumbs-nav";
 import { Word } from "@/app/types/types";
 
-type PageProps = { params: { id: string } };
-
-export default async function WordbookDetailPage({ params }: PageProps) {
+export default async function WordbookDetailPage(
+  { params }: { params: { id: string } }
+){
     const supabase = await createClient();
     // ログイン必須（一覧と同じ運用）
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) redirect("/login");
 
-    const { id } = await params;
+    const { id } = params;
     const bookId = Number(id);
     if (!Number.isFinite(bookId)) notFound();
 
