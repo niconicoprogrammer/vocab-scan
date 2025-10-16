@@ -5,7 +5,7 @@ import { ai } from "@/app/lib/gemini/gemini";
 import type { Pair, AnalyzeResult } from "@/app/types/types";
 
 // --- 設定（必要なら .env で上書き可） ---
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 const MAX_OUTPUT_TOKENS = Number(process.env.GEMINI_MAX_OUTPUT_TOKENS ?? 8192);
 const MAX_PAIRS_PER_IMAGE = Number(process.env.MAX_PAIRS_PER_IMAGE ?? 30);
 
