@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState, useActionState, startTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useActionState, startTransition } from "react";
 import {
   Typography, Stack, Paper, Button, List, ListItem, ListItemText, Box,
   Dialog, DialogTitle, DialogContent, DialogActions, LinearProgress,
@@ -9,8 +9,8 @@ import {
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { analyzeAction } from "@/app/actions";
-import { Pair, AnalyzeResult} from "@/app/types/types";
+import { analyzeImage } from "@/app/actions";
+import { Pair, AnalyzeResult } from "@/app/types/types";
 
 /**
  * 画像（複数）を選択/ドラッグ&ドロップ → 並び替え → サーバーアクションで解析
@@ -20,7 +20,7 @@ import { Pair, AnalyzeResult} from "@/app/types/types";
  * - ファイル選択は「追加入力」スタイル（何回に分けても積み上げる）
  * - 同名ファイルは重複採用しない（単純な name ベースの重複排除）
  * - 並び替えは HTML5 DnD（リスト項目をドラッグして順序入替）
- * - 解析は Server Action（analyzeAction）へ FormData で画像群を送る
+ * - 解析は Server Action（analyzeImage）へ FormData で画像群を送る
  * - 結果は TSV（word<TAB>meaning の行群）で表示
  */
 export default function Home() {
@@ -134,11 +134,11 @@ export default function Home() {
 
   /**
    * Server Action の状態管理。
-   * - analyzeAction: 画像を受け取り OCR/解析し、Pair[] を返す想定
+   * - analyzeImage: 画像を受け取り OCR/解析し、Pair[] を返す想定
    * - state.ok が true なら解析成功、state.data に結果（Pair[]）
    */
-  const [state, formAction, pending] = useActionState<AnalyzeResult, FormData>(
-    analyzeAction,
+  const [state, analyzeAction, pending] = useActionState<AnalyzeResult, FormData>(
+    analyzeImage,
     { ok: false, error: "" }
   );
 
@@ -152,7 +152,7 @@ export default function Home() {
     for (const f of files) fd.append("files", f);
     setOpen(true);
     // 送信と state 更新は並行（UI のブロッキングを避ける）
-    startTransition(() => { formAction(fd); });
+    startTransition(() => { analyzeAction(fd); });
   };
 
   // ========= 画面 =========
@@ -223,15 +223,18 @@ export default function Home() {
 
         {/* ファイル追加／操作ボタン群 */}
         <Stack direction="row" spacing={2} sx={{ mt: 2, justifyContent: "center" }}>
+          {files.length > 0 && (
+            <>
+              <Button variant="contained" onClick={handleAnalyze} disabled={pending}>解析</Button>
+            </>
+          )}
           <Box component="label">
             <Button variant="contained" component="span">ファイル選択</Button>
             {/* 同名重複は mergeFiles 側でスキップ */}
             <input hidden type="file" accept="image/*" multiple onChange={handlePick} />
           </Box>
-
           {files.length > 0 && (
             <>
-              <Button variant="contained" onClick={handleAnalyze} disabled={pending}>解析</Button>
               <Button variant="outlined" onClick={() => setFiles([])} disabled={pending}>クリア</Button>
             </>
           )}
@@ -262,7 +265,7 @@ export default function Home() {
               minHeight: 160,
             }}
           >
-            {state.ok && tsv ? tsv : "（まだありません）"}
+            {!pending && state.ok && tsv ? tsv : "（まだありません）"}
           </Box>
         </DialogContent>
 

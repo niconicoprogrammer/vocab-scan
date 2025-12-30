@@ -25,7 +25,7 @@ export default function LoginPage() {
       <Card>
         <CardContent>
           <Typography variant="h5" gutterBottom>
-            Sign in / Sign Up
+            ログイン / 新規登録
           </Typography>
 
           {/* エラーメッセージ（直近の実行に応じて片方だけ出る想定） */}
@@ -77,9 +77,9 @@ export default function LoginPage() {
                   disabled={isBusy}
                   aria-busy={signInIsPending ? 'true' : undefined}
                   startIcon={signInIsPending ? <CircularProgress size={18} /> : null}
-                  sx={{ minWidth: 150}}
+                  sx={{ width: 150, whiteSpace: 'nowrap'}}
                 >
-                  {signInIsPending ? 'Signing in…' : 'Sign in'}
+                  {signInIsPending ? 'ログイン処理中…' : 'ログイン'}
                 </Button>
 
                 <Button
@@ -90,9 +90,9 @@ export default function LoginPage() {
                   disabled={isBusy}
                   aria-busy={signUpIsPending ? 'true' : undefined}
                   startIcon={signUpIsPending ? <CircularProgress size={18} /> : null}
-                  sx={{ minWidth: 150}}
+                  sx={{ width: 150, whiteSpace: 'nowrap'}}
                 >
-                  {signUpIsPending ? 'Signing up…' : 'Sign up'}
+                  {signUpIsPending ? '新規登録処理中…' : '新規登録'}
                 </Button>
               </Stack>
             </Stack>

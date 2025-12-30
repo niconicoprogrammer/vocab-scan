@@ -100,7 +100,7 @@ function partsToText(parts: unknown): string {
 }
 
 // --- 本体：最初から1枚ずつ処理 ---
-export async function analyzeAction(_prev: AnalyzeResult, formData: FormData): Promise<AnalyzeResult> {
+export async function analyzeImage(_prev: AnalyzeResult, formData: FormData): Promise<AnalyzeResult> {
   const files = formData.getAll("files") as File[];
   if (!files?.length) return { ok: false, error: "画像がありません" } as const;
 
