@@ -1,8 +1,8 @@
 "use server";
 
 import { Type } from "@google/genai";
-import { ai } from "@/app/lib/gemini/gemini";
-import type { Pair, AnalyzeResult } from "@/app/types/types";
+import { ai } from "@/lib/gemini/gemini";
+import type { Pair, AnalyzeResult } from "@/types/types";
 
 // --- 設定（必要なら .env で上書き可） ---
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
@@ -62,7 +62,8 @@ function tryParseArray(text: string): Pair[] {
 
 async function fileToInline(file: File) {
   return {
-    mimeType: file.type || (file.name.endsWith(".jpg") ? "image/jpeg" : "image/png"),
+    mimeType:
+      file.type || (file.name.endsWith(".jpg") ? "image/jpeg" : "image/png"),
     base64: Buffer.from(await file.arrayBuffer()).toString("base64"),
   };
 }
@@ -78,9 +79,18 @@ function getUsage(x: unknown): GenAIUsage | undefined {
   const maybe = (x as { usageMetadata?: unknown }).usageMetadata;
   if (isRecord(maybe)) {
     return {
-      promptTokenCount: typeof maybe.promptTokenCount === "number" ? maybe.promptTokenCount : undefined,
-      totalTokenCount: typeof maybe.totalTokenCount === "number" ? maybe.totalTokenCount : undefined,
-      candidatesTokenCount: typeof maybe.candidatesTokenCount === "number" ? maybe.candidatesTokenCount : undefined,
+      promptTokenCount:
+        typeof maybe.promptTokenCount === "number"
+          ? maybe.promptTokenCount
+          : undefined,
+      totalTokenCount:
+        typeof maybe.totalTokenCount === "number"
+          ? maybe.totalTokenCount
+          : undefined,
+      candidatesTokenCount:
+        typeof maybe.candidatesTokenCount === "number"
+          ? maybe.candidatesTokenCount
+          : undefined,
     };
   }
   return;
@@ -91,16 +101,20 @@ function partsToText(parts: unknown): string {
   if (!Array.isArray(parts)) return "";
   const texts: string[] = [];
   for (const p of parts) {
-    const t = (isRecord(p) && isString((p as { text?: unknown }).text))
-      ? (p as { text: string }).text
-      : "";
+    const t =
+      isRecord(p) && isString((p as { text?: unknown }).text)
+        ? (p as { text: string }).text
+        : "";
     if (t) texts.push(t);
   }
   return texts.join("");
 }
 
 // --- 本体：最初から1枚ずつ処理 ---
-export async function analyzeImage(_prev: AnalyzeResult, formData: FormData): Promise<AnalyzeResult> {
+export async function analyzeImage(
+  _prev: AnalyzeResult,
+  formData: FormData,
+): Promise<AnalyzeResult> {
   const files = formData.getAll("files") as File[];
   if (!files?.length) return { ok: false, error: "画像がありません" } as const;
 
@@ -143,8 +157,7 @@ export async function analyzeImage(_prev: AnalyzeResult, formData: FormData): Pr
     });
 
     const text =
-      resp.text ??
-      partsToText(resp.candidates?.[0]?.content?.parts ?? []);
+      resp.text ?? partsToText(resp.candidates?.[0]?.content?.parts ?? []);
 
     if (!text) {
       // その画像はスキップ（全滅したら最後にエラー）
@@ -163,9 +176,13 @@ export async function analyzeImage(_prev: AnalyzeResult, formData: FormData): Pr
   const deduped: Pair[] = [];
   for (const p of allPairs) {
     const key = p.word.trim().toLowerCase();
-    if (key && !seen.has(key)) { seen.add(key); deduped.push(p); }
+    if (key && !seen.has(key)) {
+      seen.add(key);
+      deduped.push(p);
+    }
   }
 
-  if (!deduped.length) return { ok: false, error: "抽出結果がありませんでした" } as const;
+  if (!deduped.length)
+    return { ok: false, error: "抽出結果がありませんでした" } as const;
   return { ok: true, data: deduped } as const;
 }

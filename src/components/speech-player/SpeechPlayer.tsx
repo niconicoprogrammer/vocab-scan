@@ -1,13 +1,18 @@
 "use client";
 
 import {
-  Stack, Card, CardContent,
-  Button, Typography, LinearProgress, Slider
+  Stack,
+  Card,
+  CardContent,
+  Button,
+  Typography,
+  LinearProgress,
+  Slider,
 } from "@mui/material";
 import PlayArrow from "@mui/icons-material/PlayArrow";
 import Pause from "@mui/icons-material/Pause";
 import Stop from "@mui/icons-material/Stop";
-import { Pair } from "@/app/types/types";
+import { Pair } from "@/types/types";
 
 export type SpeechPlayerProps = {
   rows: Pair[];
@@ -15,8 +20,8 @@ export type SpeechPlayerProps = {
   total: number;
   progress: number;
   playing: boolean;
-  rate: number,
-  gapSec: number,
+  rate: number;
+  gapSec: number;
   onPlay: () => void;
   onPause: () => void;
   onStop: () => void;
@@ -36,9 +41,8 @@ export default function SpeechPlayer({
   onPause,
   onStop,
   onRateChange,
-  onGapSecChange
+  onGapSecChange,
 }: SpeechPlayerProps) {
-
   const disabledPlay = rows.length === 0 || playing;
   const disabledPause = !playing;
   const disabledStop = !playing;

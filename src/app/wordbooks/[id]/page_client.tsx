@@ -2,14 +2,21 @@
 
 import { useEffect, useMemo, useState, useActionState } from "react";
 import {
-  Stack, Card, CardHeader, CardContent, TextField, Button, Alert, Grid
+  Stack,
+  Card,
+  CardHeader,
+  CardContent,
+  TextField,
+  Button,
+  Alert,
+  Grid,
 } from "@mui/material";
 import { replaceWords } from "./actions";
-import { useSpeechController } from "@/app/hooks/speech/useSpeechController";
-import SpeechPlayer from "@/app/components/speech-player/SpeechPlayer";
-import WordsPreview from "@/app/components/words-preview/WordsPreview";
-import { parseTsv, wordsToTsv } from "@/app/utils/tsv";
-import { Pair, Word } from "@/app/types/types";
+import { useSpeechController } from "@/hooks/speech/useSpeechController";
+import SpeechPlayer from "@/components/speech-player/SpeechPlayer";
+import WordsPreview from "@/components/words-preview/WordsPreview";
+import { parseTsv, wordsToTsv } from "@/utils/tsv";
+import { Pair, Word } from "@/types/types";
 
 export default function Client({
   bookId,
@@ -18,10 +25,11 @@ export default function Client({
   bookId: number;
   initialWords: Word[];
 }) {
-
   // ========= UI状態 =========
   const [tsv, setTsv] = useState<string>(() => wordsToTsv(initialWords));
-  const [rows, setRows] = useState<Pair[]>(() => parseTsv(wordsToTsv(initialWords)));
+  const [rows, setRows] = useState<Pair[]>(() =>
+    parseTsv(wordsToTsv(initialWords)),
+  );
   const [rate, setRate] = useState(1.0);
   const [gapSec, setGapSec] = useState(0.25);
   const [playing, setPlaying] = useState(false);
@@ -32,7 +40,7 @@ export default function Client({
   // ========= 派生値 =========
   const total = rows.length;
   const progress = useMemo(() => {
-    return (total > 0 && current >= 0) ? ((current + 1) / total) * 100 : 0;
+    return total > 0 && current >= 0 ? ((current + 1) / total) * 100 : 0;
   }, [current, total]);
 
   // ========= データ処理 =========
@@ -53,12 +61,12 @@ export default function Client({
         return voices.find((v) => v.lang === lang) ?? null;
       },
     }),
-    [rate, gapSec]
+    [rate, gapSec],
   );
 
   const ctrl = useSpeechController(
     { rows, current, setCurrent, playing, setPlaying, loop },
-    cfg
+    cfg,
   );
 
   // 読み込み直後や initialWords が変わったときもプリセットを同期
@@ -99,7 +107,12 @@ export default function Client({
           </Alert>
         )}
 
-        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 3}}>
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent="center"
+          sx={{ mb: 3 }}
+        >
           <form action={saveAction}>
             <input type="hidden" name="book_id" value={bookId} />
             <input type="hidden" name="payload" value={JSON.stringify(rows)} />
@@ -107,8 +120,12 @@ export default function Client({
               {saving ? "保存中..." : "保存"}
             </Button>
           </form>
-          <Button variant="contained" onClick={handleParse}>解析</Button>
-          <Button variant="outlined" onClick={() => setTsv("")}>クリア</Button>
+          <Button variant="contained" onClick={handleParse}>
+            解析
+          </Button>
+          <Button variant="outlined" onClick={() => setTsv("")}>
+            クリア
+          </Button>
         </Stack>
 
         <Grid container spacing={3}>
@@ -116,14 +133,21 @@ export default function Client({
             <Card variant="outlined">
               <CardHeader title="プレビュー" subheader={`${rows.length} 件`} />
               <CardContent sx={{ maxHeight: 400, overflow: "auto" }}>
-                <WordsPreview rows={rows} current={current} onRowClick={ctrl.handleRowClick} />
+                <WordsPreview
+                  rows={rows}
+                  current={current}
+                  onRowClick={ctrl.handleRowClick}
+                />
               </CardContent>
             </Card>
           </Grid>
 
           <Grid size={{ xs: 12, md: 6 }}>
             <Card variant="outlined">
-              <CardHeader title="入力" subheader="TSVを貼り付けて編集してください" />
+              <CardHeader
+                title="入力"
+                subheader="TSVを貼り付けて編集してください"
+              />
               <CardContent>
                 <TextField
                   label="TSV（word<TAB>meaning）"

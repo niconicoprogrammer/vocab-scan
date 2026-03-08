@@ -1,8 +1,8 @@
 "use server";
 
-import { createClient } from "@/app/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { Pair } from "@/app/types/types";
+import { Pair } from "@/types/types";
 
 function parsePayload(v: FormDataEntryValue | null): Pair[] {
   try {
@@ -11,7 +11,7 @@ function parsePayload(v: FormDataEntryValue | null): Pair[] {
     return arr
       .map((r) => ({
         word: String(r?.word ?? "").trim(),
-        meaning: String(r?.meaning ?? "").trim()
+        meaning: String(r?.meaning ?? "").trim(),
       }))
       .filter((r) => r.word && r.meaning);
   } catch {
@@ -21,7 +21,9 @@ function parsePayload(v: FormDataEntryValue | null): Pair[] {
 
 export async function replaceWords(_: unknown, fd: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "Not signed in", count: 0 };
 
   const bookId = Number(fd.get("book_id"));
@@ -49,7 +51,9 @@ export async function replaceWords(_: unknown, fd: FormData) {
       updated_at: now,
     }));
 
-    const { error: insErr } = await supabase.from("wordbook_entries").insert(ins);
+    const { error: insErr } = await supabase
+      .from("wordbook_entries")
+      .insert(ins);
     if (insErr) return { ok: false, error: insErr.message, count: 0 };
   }
 

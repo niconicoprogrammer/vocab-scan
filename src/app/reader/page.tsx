@@ -2,13 +2,20 @@
 
 import { useMemo, useState } from "react";
 import {
-  Stack, Card, CardHeader, CardContent, TextField, Button, Typography, Grid
+  Stack,
+  Card,
+  CardHeader,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  Grid,
 } from "@mui/material";
-import { useSpeechController } from "@/app/hooks/speech/useSpeechController";
-import SpeechPlayer from "@/app/components/speech-player/SpeechPlayer";
-import WordsPreview from "@/app/components/words-preview/WordsPreview";
-import { parseTsv} from "@/app/utils/tsv";
-import { Pair } from "@/app/types/types";
+import { useSpeechController } from "@/hooks/speech/useSpeechController";
+import SpeechPlayer from "@/components/speech-player/SpeechPlayer";
+import WordsPreview from "@/components/words-preview/WordsPreview";
+import { parseTsv } from "@/utils/tsv";
+import { Pair } from "@/types/types";
 
 export default function ReaderPage() {
   // ========= UI状態 =========
@@ -23,7 +30,7 @@ export default function ReaderPage() {
   // ========= 派生値 =========
   const total = rows.length;
   const progress = useMemo(() => {
-    return (total > 0 && current >= 0) ? ((current + 1) / total) * 100 : 0;
+    return total > 0 && current >= 0 ? ((current + 1) / total) * 100 : 0;
   }, [current, total]);
 
   // ========= データ処理 =========
@@ -44,12 +51,12 @@ export default function ReaderPage() {
         return voices.find((v) => v.lang === lang) ?? null;
       },
     }),
-    [rate, gapSec]
+    [rate, gapSec],
   );
 
   const ctrl = useSpeechController(
     { rows, current, setCurrent, playing, setPlaying, loop },
-    cfg
+    cfg,
   );
 
   // ========= 画面 =========
@@ -87,7 +94,10 @@ export default function ReaderPage() {
 
         <Grid size={{ xs: 12, md: 6 }}>
           <Card>
-            <CardHeader title="入力" subheader="TSVを貼り付けて編集してください" />
+            <CardHeader
+              title="入力"
+              subheader="TSVを貼り付けて編集してください"
+            />
             <CardContent>
               <TextField
                 label="TSV（word<TAB>meaning）"
@@ -99,8 +109,12 @@ export default function ReaderPage() {
                 placeholder="apple\tりんご\nenjoy\t楽しむ"
               />
               <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                <Button variant="contained" onClick={handleParse}>解析</Button>
-                <Button variant="text" onClick={() => setTsv("")}>クリア</Button>
+                <Button variant="contained" onClick={handleParse}>
+                  解析
+                </Button>
+                <Button variant="text" onClick={() => setTsv("")}>
+                  クリア
+                </Button>
               </Stack>
             </CardContent>
           </Card>

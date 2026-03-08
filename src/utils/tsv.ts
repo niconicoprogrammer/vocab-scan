@@ -1,4 +1,4 @@
-import { Pair } from "@/app/types/types";
+import { Pair } from "@/types/types";
 
 /** 前後の二重/単一引用符を剥がしてtrim */
 function clean(cell: string): string {
@@ -48,12 +48,14 @@ export function parseTsv(tsv: string): Pair[] {
  * Row[] -> TSV
  * 第3列は lang があるときのみ出力
  */
-export function toTsv(rows: Array<Pair | { word: string; meaning: string; lang?: string }>): string {
+export function toTsv(
+  rows: Array<Pair | { word: string; meaning: string; lang?: string }>,
+): string {
   return (rows ?? [])
     .map(({ word, meaning }) =>
       [word?.trim() ?? "", meaning?.trim() ?? ""]
         .filter((v, i) => v || i < 2) // 1,2列は必須、3列はあれば
-        .join("\t")
+        .join("\t"),
     )
     .join("\n");
 }
@@ -64,6 +66,6 @@ export function toTsv(rows: Array<Pair | { word: string; meaning: string; lang?:
 export type Word = { id: number; term: string; meaning: string };
 export function wordsToTsv(words: Word[]): string {
   return (words ?? [])
-    .map(w => [w.term?.trim() ?? "", w.meaning?.trim() ?? ""].join("\t"))
+    .map((w) => [w.term?.trim() ?? "", w.meaning?.trim() ?? ""].join("\t"))
     .join("\n");
 }
