@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Box,
   Stack,
@@ -18,15 +18,15 @@ import {
   TableCell,
   TableBody,
   IconButton,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { useActionState } from "react";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { useActionState } from 'react';
 import {
   createWordbook,
   deleteWordbook,
   updateWordbook,
-} from "@/features/wordbooks/actions";
+} from '@/features/wordbooks/actions';
 
 type Book = { id: number; title: string; created_at: string };
 
@@ -37,11 +37,11 @@ export default function WordbookList({
 }) {
   // 新規作成
   const [openNew, setOpenNew] = useState(false);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState('');
 
   // 編集
   const [editId, setEditId] = useState<number | null>(null);
-  const [editTitle, setEditTitle] = useState("");
+  const [editTitle, setEditTitle] = useState('');
   const editing = editId !== null;
 
   // サーバーアクション
@@ -72,7 +72,7 @@ export default function WordbookList({
         <Button
           variant="contained"
           onClick={() => {
-            setTitle("");
+            setTitle('');
             setOpenNew(true);
           }}
         >
@@ -109,7 +109,7 @@ export default function WordbookList({
                 >
                   <EditIcon fontSize="small" />
                 </IconButton>
-                <form action={deleteAction} style={{ display: "inline" }}>
+                <form action={deleteAction} style={{ display: 'inline' }}>
                   <input type="hidden" name="id" value={b.id} />
                   <IconButton
                     size="small"
@@ -124,7 +124,7 @@ export default function WordbookList({
               <TableCell>
                 <a
                   href={`/wordbooks/${b.id}`}
-                  style={{ textDecoration: "none" }}
+                  style={{ textDecoration: 'none' }}
                 >
                   {b.title}
                 </a>
@@ -133,7 +133,7 @@ export default function WordbookList({
           ))}
           {initialBooks.length === 0 && (
             <TableRow>
-              <TableCell colSpan={3} sx={{ color: "text.secondary" }}>
+              <TableCell colSpan={3} sx={{ color: 'text.secondary' }}>
                 まだ単語帳がありません。「新規作成」から追加してください。
               </TableCell>
             </TableRow>
@@ -182,7 +182,7 @@ export default function WordbookList({
         <DialogTitle>単語帳を編集</DialogTitle>
         <form action={updateAction} onSubmit={() => setEditId(null)}>
           <DialogContent dividers>
-            <input type="hidden" name="id" value={editId ?? ""} />
+            <input type="hidden" name="id" value={editId ?? ''} />
             <Stack spacing={2}>
               <TextField
                 name="title"

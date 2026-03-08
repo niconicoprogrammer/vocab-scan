@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Stack,
@@ -8,11 +8,11 @@ import {
   Typography,
   LinearProgress,
   Slider,
-} from "@mui/material";
-import PlayArrow from "@mui/icons-material/PlayArrow";
-import Pause from "@mui/icons-material/Pause";
-import Stop from "@mui/icons-material/Stop";
-import { Pair } from "@/types/types";
+} from '@mui/material';
+import PlayArrow from '@mui/icons-material/PlayArrow';
+import Pause from '@mui/icons-material/Pause';
+import Stop from '@mui/icons-material/Stop';
+import { Pair } from '@/types/types';
 
 export type SpeechPlayerProps = {
   rows: Pair[];
@@ -50,7 +50,7 @@ export default function SpeechPlayer({
   const currentLabel =
     current >= 0 && rows[current]
       ? `${rows[current].word} — ${rows[current].meaning}`
-      : "—";
+      : '—';
 
   return (
     <Card variant="outlined">

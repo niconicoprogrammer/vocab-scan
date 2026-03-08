@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from 'react';
 import {
   createSpeechController,
   type Cfg,
   type Pair,
   type TtsController,
-} from "@/features/speech/logic/speechController";
+} from '@/features/speech/logic/speechController';
 
 export function useSpeechController(
   deps: {

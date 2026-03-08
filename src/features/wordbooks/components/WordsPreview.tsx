@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Box,
@@ -12,8 +12,8 @@ import {
   TableCell,
   TableBody,
   Chip,
-} from "@mui/material";
-import { Pair } from "@/types/types";
+} from '@mui/material';
+import { Pair } from '@/types/types';
 
 export type WordsPreviewProps = {
   rows: Pair[];
@@ -33,7 +33,7 @@ export default function WordsPreview({
         action={<Chip label={`${rows.length} 件`} size="small" />}
       />
       <CardContent sx={{ p: 0 }}>
-        <Box sx={{ maxHeight: 360, overflow: "auto" }}>
+        <Box sx={{ maxHeight: 360, overflow: 'auto' }}>
           <Table size="small" stickyHeader>
             <TableHead>
               <TableRow>
@@ -49,7 +49,7 @@ export default function WordsPreview({
                   hover
                   selected={i === current}
                   onClick={() => onRowClick(i)}
-                  sx={{ cursor: "pointer" }}
+                  sx={{ cursor: 'pointer' }}
                 >
                   <TableCell>{i + 1}</TableCell>
                   <TableCell>{r.word}</TableCell>

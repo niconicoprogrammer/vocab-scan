@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Breadcrumbs, Typography } from "@mui/material";
-import { BreadcrumbsItem } from "@/types/types";
+import Link from 'next/link';
+import { Breadcrumbs, Typography } from '@mui/material';
+import { BreadcrumbsItem } from '@/types/types';
 
 export default function BreadcrumbsNav({
   items,
@@ -19,8 +19,8 @@ export default function BreadcrumbsNav({
             href={it.href}
             color="inherit"
             sx={{
-              textDecoration: "none",
-              "&:hover": { textDecoration: "underline" },
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' },
             }}
           >
             {it.label}

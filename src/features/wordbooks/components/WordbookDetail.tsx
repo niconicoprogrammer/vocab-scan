@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState, useActionState } from "react";
+import { useEffect, useMemo, useState, useActionState } from 'react';
 import {
   Stack,
   Card,
@@ -10,13 +10,13 @@ import {
   Button,
   Alert,
   Grid,
-} from "@mui/material";
-import { replaceWords } from "@/features/wordbooks/actions_id";
-import { useSpeechController } from "@/features/speech/hooks/useSpeechController";
-import SpeechPlayer from "@/features/speech/components/SpeechPlayer";
-import WordsPreview from "@/features/wordbooks/components/WordsPreview";
-import { parseTsv, wordsToTsv } from "@/utils/tsv";
-import { Pair, Word } from "@/types/types";
+} from '@mui/material';
+import { replaceWords } from '@/features/wordbooks/actions_id';
+import { useSpeechController } from '@/features/speech/hooks/useSpeechController';
+import SpeechPlayer from '@/features/speech/components/SpeechPlayer';
+import WordsPreview from '@/features/wordbooks/components/WordsPreview';
+import { parseTsv, wordsToTsv } from '@/utils/tsv';
+import { Pair, Word } from '@/types/types';
 
 export default function WordbookDetail({
   bookId,
@@ -55,7 +55,7 @@ export default function WordbookDetail({
       rate,
       pitch: 1,
       gapSec,
-      LANG: { en: "en-US", ja: "ja-JP" },
+      LANG: { en: 'en-US', ja: 'ja-JP' },
       pickVoice: (lang: string) => {
         const voices = window.speechSynthesis.getVoices();
         return voices.find((v) => v.lang === lang) ?? null;
@@ -117,13 +117,13 @@ export default function WordbookDetail({
             <input type="hidden" name="book_id" value={bookId} />
             <input type="hidden" name="payload" value={JSON.stringify(rows)} />
             <Button type="submit" variant="contained" disabled={saving}>
-              {saving ? "保存中..." : "保存"}
+              {saving ? '保存中...' : '保存'}
             </Button>
           </form>
           <Button variant="contained" onClick={handleParse}>
             解析
           </Button>
-          <Button variant="outlined" onClick={() => setTsv("")}>
+          <Button variant="outlined" onClick={() => setTsv('')}>
             クリア
           </Button>
         </Stack>
@@ -132,7 +132,7 @@ export default function WordbookDetail({
           <Grid size={{ xs: 12, md: 6 }}>
             <Card variant="outlined">
               <CardHeader title="プレビュー" subheader={`${rows.length} 件`} />
-              <CardContent sx={{ maxHeight: 400, overflow: "auto" }}>
+              <CardContent sx={{ maxHeight: 400, overflow: 'auto' }}>
                 <WordsPreview
                   rows={rows}
                   current={current}

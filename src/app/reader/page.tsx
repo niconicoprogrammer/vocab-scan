@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
+import { useMemo, useState } from 'react';
 import {
   Stack,
   Card,
@@ -10,16 +10,16 @@ import {
   Button,
   Typography,
   Grid,
-} from "@mui/material";
-import { useSpeechController } from "@/features/speech/hooks/useSpeechController";
-import SpeechPlayer from "@/features/speech/components/SpeechPlayer";
-import WordsPreview from "@/features/wordbooks/components/WordsPreview";
-import { parseTsv } from "@/utils/tsv";
-import { Pair } from "@/types/types";
+} from '@mui/material';
+import { useSpeechController } from '@/features/speech/hooks/useSpeechController';
+import SpeechPlayer from '@/features/speech/components/SpeechPlayer';
+import WordsPreview from '@/features/wordbooks/components/WordsPreview';
+import { parseTsv } from '@/utils/tsv';
+import { Pair } from '@/types/types';
 
 export default function ReaderPage() {
   // ========= UI状態 =========
-  const [tsv, setTsv] = useState("");
+  const [tsv, setTsv] = useState('');
   const [rows, setRows] = useState<Pair[]>([]);
   const [rate, setRate] = useState(1.0);
   const [gapSec, setGapSec] = useState(0.25);
@@ -45,7 +45,7 @@ export default function ReaderPage() {
       rate,
       pitch: 1,
       gapSec,
-      LANG: { en: "en-US", ja: "ja-JP" },
+      LANG: { en: 'en-US', ja: 'ja-JP' },
       pickVoice: (lang: string) => {
         const voices = window.speechSynthesis.getVoices();
         return voices.find((v) => v.lang === lang) ?? null;
@@ -112,7 +112,7 @@ export default function ReaderPage() {
                 <Button variant="contained" onClick={handleParse}>
                   解析
                 </Button>
-                <Button variant="text" onClick={() => setTsv("")}>
+                <Button variant="text" onClick={() => setTsv('')}>
                   クリア
                 </Button>
               </Stack>

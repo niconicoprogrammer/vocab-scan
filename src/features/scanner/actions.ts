@@ -1,11 +1,11 @@
-"use server";
+'use server';
 
-import { Type } from "@google/genai";
-import { ai } from "@/lib/gemini/gemini";
-import type { Pair, AnalyzeResult } from "@/types/types";
+import { Type } from '@google/genai';
+import { ai } from '@/lib/gemini/gemini';
+import type { Pair, AnalyzeResult } from '@/types/types';
 
 // --- 設定（必要なら .env で上書き可） ---
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
 const MAX_OUTPUT_TOKENS = Number(process.env.GEMINI_MAX_OUTPUT_TOKENS ?? 8192);
 const MAX_PAIRS_PER_IMAGE = Number(process.env.MAX_PAIRS_PER_IMAGE ?? 30);
 
@@ -17,7 +17,7 @@ const responseSchema = {
       word: { type: Type.STRING },
       meaning: { type: Type.STRING },
     },
-    required: ["word", "meaning"],
+    required: ['word', 'meaning'],
   },
 } as const;
 
@@ -26,13 +26,13 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // 型ガードたち
 const isRecord = (v: unknown): v is Record<string, unknown> =>
-  typeof v === "object" && v !== null;
+  typeof v === 'object' && v !== null;
 
-const isString = (v: unknown): v is string => typeof v === "string";
+const isString = (v: unknown): v is string => typeof v === 'string';
 
 type RawPair = { word?: unknown; meaning?: unknown };
 const isRawPair = (v: unknown): v is RawPair =>
-  isRecord(v) && "word" in v && "meaning" in v;
+  isRecord(v) && 'word' in v && 'meaning' in v;
 
 function sanitize(raw: unknown): Pair[] {
   if (!Array.isArray(raw)) return [];
@@ -63,8 +63,8 @@ function tryParseArray(text: string): Pair[] {
 async function fileToInline(file: File) {
   return {
     mimeType:
-      file.type || (file.name.endsWith(".jpg") ? "image/jpeg" : "image/png"),
-    base64: Buffer.from(await file.arrayBuffer()).toString("base64"),
+      file.type || (file.name.endsWith('.jpg') ? 'image/jpeg' : 'image/png'),
+    base64: Buffer.from(await file.arrayBuffer()).toString('base64'),
   };
 }
 
@@ -80,15 +80,15 @@ function getUsage(x: unknown): GenAIUsage | undefined {
   if (isRecord(maybe)) {
     return {
       promptTokenCount:
-        typeof maybe.promptTokenCount === "number"
+        typeof maybe.promptTokenCount === 'number'
           ? maybe.promptTokenCount
           : undefined,
       totalTokenCount:
-        typeof maybe.totalTokenCount === "number"
+        typeof maybe.totalTokenCount === 'number'
           ? maybe.totalTokenCount
           : undefined,
       candidatesTokenCount:
-        typeof maybe.candidatesTokenCount === "number"
+        typeof maybe.candidatesTokenCount === 'number'
           ? maybe.candidatesTokenCount
           : undefined,
     };
@@ -98,16 +98,16 @@ function getUsage(x: unknown): GenAIUsage | undefined {
 
 // parts から text を抽出（型不明に強い）
 function partsToText(parts: unknown): string {
-  if (!Array.isArray(parts)) return "";
+  if (!Array.isArray(parts)) return '';
   const texts: string[] = [];
   for (const p of parts) {
     const t =
       isRecord(p) && isString((p as { text?: unknown }).text)
         ? (p as { text: string }).text
-        : "";
+        : '';
     if (t) texts.push(t);
   }
-  return texts.join("");
+  return texts.join('');
 }
 
 // --- 本体：最初から1枚ずつ処理 ---
@@ -115,16 +115,16 @@ export async function analyzeImage(
   _prev: AnalyzeResult,
   formData: FormData,
 ): Promise<AnalyzeResult> {
-  const files = formData.getAll("files") as File[];
-  if (!files?.length) return { ok: false, error: "画像がありません" } as const;
+  const files = formData.getAll('files') as File[];
+  if (!files?.length) return { ok: false, error: '画像がありません' } as const;
 
   const instruction = [
-    "From this vocabulary-book image, extract DISTINCT pairs.",
-    "- word: English headword (normalize casing; strip punctuation).",
-    "- meaning: short Japanese gloss ONLY (no examples, no POS).",
-    "Ignore headings, page numbers, section titles, examples, decorations.",
+    'From this vocabulary-book image, extract DISTINCT pairs.',
+    '- word: English headword (normalize casing; strip punctuation).',
+    '- meaning: short Japanese gloss ONLY (no examples, no POS).',
+    'Ignore headings, page numbers, section titles, examples, decorations.',
     `Return ONLY JSON matching the schema. Limit to MAX ${MAX_PAIRS_PER_IMAGE} pairs for this image.`,
-  ].join("\n");
+  ].join('\n');
 
   const allPairs: Pair[] = [];
 
@@ -138,9 +138,9 @@ export async function analyzeImage(
 
     const resp = await ai.models.generateContent({
       model: MODEL,
-      contents: [{ role: "user", parts }],
+      contents: [{ role: 'user', parts }],
       config: {
-        responseMimeType: "application/json",
+        responseMimeType: 'application/json',
         responseSchema,
         temperature: 0,
         maxOutputTokens: MAX_OUTPUT_TOKENS,
@@ -150,7 +150,7 @@ export async function analyzeImage(
     // 参考ログ
     const finish = resp.candidates?.[0]?.finishReason;
     const usage = getUsage(resp);
-    console.log("[analyze:single] file:", f.name, {
+    console.log('[analyze:single] file:', f.name, {
       model: resp.modelVersion,
       finishReason: finish,
       usage,
@@ -183,6 +183,6 @@ export async function analyzeImage(
   }
 
   if (!deduped.length)
-    return { ok: false, error: "抽出結果がありませんでした" } as const;
+    return { ok: false, error: '抽出結果がありませんでした' } as const;
   return { ok: true, data: deduped } as const;
 }

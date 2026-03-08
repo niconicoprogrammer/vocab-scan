@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   useCallback,
@@ -7,7 +7,7 @@ import {
   useState,
   useActionState,
   startTransition,
-} from "react";
+} from 'react';
 import {
   Typography,
   Stack,
@@ -25,12 +25,12 @@ import {
   IconButton,
   Tooltip,
   Alert,
-} from "@mui/material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import DownloadIcon from "@mui/icons-material/Download";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { analyzeImage } from "@/features/scanner/actions";
-import { Pair, AnalyzeResult } from "@/types/types";
+} from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import DownloadIcon from '@mui/icons-material/Download';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { analyzeImage } from '@/features/scanner/actions';
+import { Pair, AnalyzeResult } from '@/types/types';
 
 /**
  * 画像（複数）を選択/ドラッグ&ドロップ → 並び替え → サーバーアクションで解析
@@ -51,9 +51,9 @@ export default function Home() {
   const [dragIndex, setDragIndex] = useState<number | null>(null); // リスト内ドラッグ元インデックス（項目の視覚強調用）
   const [overIndex, setOverIndex] = useState<number | null>(null); // ドロップ先想定インデックス（項目の視覚強調用）
   const dropRef = useRef<HTMLDivElement>(null);
-  const CUSTOM_TYPE = "application/x-reorder"; // リスト内並び替え用のカスタム MIME
+  const CUSTOM_TYPE = 'application/x-reorder'; // リスト内並び替え用のカスタム MIME
   const isFileDrag = (e: React.DragEvent) =>
-    Array.from(e.dataTransfer.types).includes("Files");
+    Array.from(e.dataTransfer.types).includes('Files');
   const isReorderDrag = (e: React.DragEvent) =>
     Array.from(e.dataTransfer.types).includes(CUSTOM_TYPE);
 
@@ -76,7 +76,7 @@ export default function Home() {
     const picked = Array.from(e.currentTarget.files ?? []);
     setFiles((prev) => mergeFiles(prev, picked));
     // 同じファイルを連続選択できるように value を空に戻す
-    e.currentTarget.value = "";
+    e.currentTarget.value = '';
   };
 
   // ========= ドロップゾーン（画像ファイルのみ採用） =========
@@ -84,7 +84,7 @@ export default function Home() {
   /** DataTransfer.files を受け取り、画像のみ追加 */
   const applyFiles = useCallback((list: FileList | null) => {
     if (!list) return;
-    const imgs = Array.from(list).filter((f) => f.type.startsWith("image/"));
+    const imgs = Array.from(list).filter((f) => f.type.startsWith('image/'));
     setFiles((prev) => mergeFiles(prev, imgs));
   }, []);
 
@@ -115,7 +115,7 @@ export default function Home() {
   /** 項目ドラッグ開始：元インデックスを dataTransfer に埋め込む */
   const handleItemDragStart = (index: number) => (e: React.DragEvent) => {
     setDragIndex(index);
-    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData(CUSTOM_TYPE, String(index));
   };
 
@@ -124,7 +124,7 @@ export default function Home() {
     if (!isReorderDrag(e)) return;
     e.preventDefault();
     setOverIndex(index);
-    e.dataTransfer.dropEffect = "move";
+    e.dataTransfer.dropEffect = 'move';
   };
 
   /** 項目ドロップ：配列を src→dst へ移動 */
@@ -167,12 +167,12 @@ export default function Home() {
   const [state, analyzeAction, pending] = useActionState<
     AnalyzeResult,
     FormData
-  >(analyzeImage, { ok: false, error: "" });
+  >(analyzeImage, { ok: false, error: '' });
 
   /** 解析結果を TSV 文字列に整形（成功時のみ） */
   const tsv = state.ok
-    ? state.data.map((r: Pair) => `${r.word}\t${r.meaning}`).join("\n")
-    : "";
+    ? state.data.map((r: Pair) => `${r.word}\t${r.meaning}`).join('\n')
+    : '';
 
   /** 解析の実行：files を FormData で Action に送る（結果はダイアログに表示） */
   const handleAnalyze = () => {
@@ -181,7 +181,7 @@ export default function Home() {
       return;
     }
     const fd = new FormData();
-    for (const f of files) fd.append("files", f);
+    for (const f of files) fd.append('files', f);
     setOpen(true);
     // 送信と state 更新は並行（UI のブロッキングを避ける）
     startTransition(() => {
@@ -210,12 +210,12 @@ export default function Home() {
         onDragLeave={onDropZoneDragLeave}
         sx={{
           p: 4,
-          textAlign: "center",
-          borderStyle: "dashed",
-          borderColor: isDragging ? "primary.main" : "divider",
+          textAlign: 'center',
+          borderStyle: 'dashed',
+          borderColor: isDragging ? 'primary.main' : 'divider',
           boxShadow: isDragging
             ? (t) => `0 0 0 3px ${t.palette.primary.main}33 inset`
-            : "none",
+            : 'none',
         }}
       >
         <Typography variant="subtitle1" fontWeight={700} gutterBottom>
@@ -226,7 +226,7 @@ export default function Home() {
         </Typography>
 
         {/* 選択済みファイル一覧（ドラッグで並び替え） */}
-        <List dense sx={{ textAlign: "center", mt: 1 }}>
+        <List dense sx={{ textAlign: 'center', mt: 1 }}>
           {files.map((f, idx) => (
             <ListItem
               key={`${f.name}-${idx}`}
@@ -246,16 +246,16 @@ export default function Home() {
               sx={{
                 borderRadius: 1,
                 mb: 0.5,
-                border: "1px solid",
+                border: '1px solid',
                 borderColor:
                   idx === overIndex
-                    ? "primary.main"
+                    ? 'primary.main'
                     : idx === dragIndex
-                      ? "grey.400"
-                      : "divider",
+                      ? 'grey.400'
+                      : 'divider',
                 bgcolor:
-                  idx === dragIndex ? "action.hover" : "background.paper",
-                cursor: "grab",
+                  idx === dragIndex ? 'action.hover' : 'background.paper',
+                cursor: 'grab',
               }}
             >
               <ListItemText
@@ -275,7 +275,7 @@ export default function Home() {
         <Stack
           direction="row"
           spacing={2}
-          sx={{ mt: 2, justifyContent: "center" }}
+          sx={{ mt: 2, justifyContent: 'center' }}
         >
           {files.length > 0 && (
             <>
@@ -339,14 +339,14 @@ export default function Home() {
           <Box
             component="pre"
             sx={{
-              whiteSpace: "pre-wrap",
-              fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+              whiteSpace: 'pre-wrap',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
               fontSize: 13,
               m: 0,
               minHeight: 160,
             }}
           >
-            {!pending && state.ok && tsv ? tsv : "（まだありません）"}
+            {!pending && state.ok && tsv ? tsv : '（まだありません）'}
           </Box>
         </DialogContent>
 
@@ -370,10 +370,10 @@ export default function Home() {
                 disabled={!tsv || pending || !state.ok}
                 onClick={() => {
                   const blob = new Blob([tsv], {
-                    type: "text/tab-separated-values;charset=utf-8",
+                    type: 'text/tab-separated-values;charset=utf-8',
                   });
                   const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a");
+                  const a = document.createElement('a');
                   a.href = url;
                   a.download = `vocab-scan-${new Date().toISOString().slice(0, 10)}.tsv`;
                   a.click();

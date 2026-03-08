@@ -1,7 +1,5 @@
-"use client";
+'use client';
 
 export default function ReaderLoading() {
-  return (
-    <div>loading...</div>
-  );
+  return <div>loading...</div>;
 }

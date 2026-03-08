@@ -1,17 +1,17 @@
-"use server";
+'use server';
 
-import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
-import { Pair } from "@/types/types";
+import { createClient } from '@/lib/supabase/server';
+import { revalidatePath } from 'next/cache';
+import { Pair } from '@/types/types';
 
 function parsePayload(v: FormDataEntryValue | null): Pair[] {
   try {
-    const arr = JSON.parse(String(v ?? "[]"));
+    const arr = JSON.parse(String(v ?? '[]'));
     if (!Array.isArray(arr)) return [];
     return arr
       .map((r) => ({
-        word: String(r?.word ?? "").trim(),
-        meaning: String(r?.meaning ?? "").trim(),
+        word: String(r?.word ?? '').trim(),
+        meaning: String(r?.meaning ?? '').trim(),
       }))
       .filter((r) => r.word && r.meaning);
   } catch {
@@ -24,19 +24,19 @@ export async function replaceWords(_: unknown, fd: FormData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false, error: "Not signed in", count: 0 };
+  if (!user) return { ok: false, error: 'Not signed in', count: 0 };
 
-  const bookId = Number(fd.get("book_id"));
-  const payload = fd.get("payload");
-  if (!bookId) return { ok: false, error: "Invalid book_id", count: 0 };
+  const bookId = Number(fd.get('book_id'));
+  const payload = fd.get('payload');
+  if (!bookId) return { ok: false, error: 'Invalid book_id', count: 0 };
 
   const rows = parsePayload(payload);
 
   // 全削除
   const { error: delErr } = await supabase
-    .from("wordbook_entries")
+    .from('wordbook_entries')
     .delete()
-    .eq("wordbook_id", bookId);
+    .eq('wordbook_id', bookId);
   if (delErr) return { ok: false, error: delErr.message, count: 0 };
 
   // 挿入
@@ -52,7 +52,7 @@ export async function replaceWords(_: unknown, fd: FormData) {
     }));
 
     const { error: insErr } = await supabase
-      .from("wordbook_entries")
+      .from('wordbook_entries')
       .insert(ins);
     if (insErr) return { ok: false, error: insErr.message, count: 0 };
   }

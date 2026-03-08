@@ -2,23 +2,23 @@ export type Pair = { word: string; meaning: string };
 export type PickVoice = (lang: string) => SpeechSynthesisVoice | null;
 
 export type Cfg = {
-  rate: number;             // 読み上げ速度
-  pitch: number;            // ピッチ
-  gapSec: number;           // 単語間/行間の待機（秒）
+  rate: number; // 読み上げ速度
+  pitch: number; // ピッチ
+  gapSec: number; // 単語間/行間の待機（秒）
   LANG: { en: string; ja: string }; // 言語コード
-  pickVoice?: PickVoice;    // 任意: 言語→voice の選択
+  pickVoice?: PickVoice; // 任意: 言語→voice の選択
 };
 
 export type Deps = {
   // 状態はDI（Reactに依存しない）
   getRows: () => Pair[];
-  getCurrent: () => number;         // -1 = 未選択
+  getCurrent: () => number; // -1 = 未選択
   setCurrent: (i: number) => void;
   getPlaying: () => boolean;
   setPlaying: (b: boolean) => void;
   getLoop: () => boolean;
   getCfg: () => Cfg;
-  synth?: SpeechSynthesis;          // 省略時は window.speechSynthesis
+  synth?: SpeechSynthesis; // 省略時は window.speechSynthesis
 };
 
 export type TtsController = {
@@ -35,7 +35,7 @@ export type TtsController = {
 function createUtterance(
   text: string,
   lang: string,
-  cfg: Pick<Cfg, "rate" | "pitch"> & { pickVoice?: PickVoice }
+  cfg: Pick<Cfg, 'rate' | 'pitch'> & { pickVoice?: PickVoice },
 ): SpeechSynthesisUtterance {
   const u = new SpeechSynthesisUtterance(text);
   u.lang = lang;
@@ -47,7 +47,9 @@ function createUtterance(
 }
 
 export function createSpeechController(deps: Deps): TtsController {
-  const synth = deps.synth ?? (typeof window !== "undefined" ? window.speechSynthesis : undefined);
+  const synth =
+    deps.synth ??
+    (typeof window !== 'undefined' ? window.speechSynthesis : undefined);
   let timer: number | null = null;
   let stopping = false;
 
@@ -94,25 +96,29 @@ export function createSpeechController(deps: Deps): TtsController {
     const delayMs = Math.max(0, gapSec * 1000);
 
     const u1 = createUtterance(pair.word, LANG.en, { rate, pitch, pickVoice });
-    const u2 = createUtterance(pair.meaning, LANG.ja, { rate, pitch, pickVoice });
+    const u2 = createUtterance(pair.meaning, LANG.ja, {
+      rate,
+      pitch,
+      pickVoice,
+    });
 
     u1.onend = () => {
       if (stopping) return;
       clearTimer();
       timer = window.setTimeout(() => synth.speak(u2), delayMs);
     };
-    u1.onerror = (e) => console.log("[u1] error", e);
+    u1.onerror = (e) => console.log('[u1] error', e);
 
     u2.onend = () => {
       if (stopping) return;
       nextFromQueue(idx);
     };
-    u2.onerror = (e) => console.log("[u2] error", e);
+    u2.onerror = (e) => console.log('[u2] error', e);
 
     try {
       synth.speak(u1);
     } catch (e) {
-      console.log("[speakPair] speak(u1) threw", e);
+      console.log('[speakPair] speak(u1) threw', e);
     }
   };
 

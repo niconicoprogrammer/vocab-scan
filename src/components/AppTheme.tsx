@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import {
   AppBar,
   Toolbar,
@@ -15,10 +15,10 @@ import {
   Tabs,
   Tab,
   Button,
-} from "@mui/material";
-import { signOut } from "@/features/auth/actions";
+} from '@mui/material';
+import { signOut } from '@/features/auth/actions';
 
-const theme = createTheme({ palette: { mode: "dark" } });
+const theme = createTheme({ palette: { mode: 'dark' } });
 
 function LinkTab(props: { label: string; href: string; value: string }) {
   const { label, href, value } = props;
@@ -28,7 +28,7 @@ function LinkTab(props: { label: string; href: string; value: string }) {
       href={href}
       label={label}
       value={value}
-      sx={{ textTransform: "none" }}
+      sx={{ textTransform: 'none' }}
     />
   );
 }
@@ -41,16 +41,16 @@ export default function AppTheme({
   initialEmail: string | null;
 }) {
   const pathname = usePathname();
-  const current = pathname.startsWith("/reader")
-    ? "/reader"
-    : pathname.startsWith("/wordbooks")
-      ? "/wordbooks"
-      : pathname === "/"
-        ? "/"
+  const current = pathname.startsWith('/reader')
+    ? '/reader'
+    : pathname.startsWith('/wordbooks')
+      ? '/wordbooks'
+      : pathname === '/'
+        ? '/'
         : false;
 
   return (
-    <AppRouterCacheProvider options={{ key: "mui" }}>
+    <AppRouterCacheProvider options={{ key: 'mui' }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
@@ -78,7 +78,7 @@ export default function AppTheme({
             <Box sx={{ flex: 1 }} />
 
             {/* 右：ログイン情報／ログアウト or ログインへ */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               {initialEmail ? (
                 <>
                   <Typography variant="body2" component="span">
@@ -88,7 +88,7 @@ export default function AppTheme({
                     onClick={signOut}
                     variant="outlined"
                     size="small"
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: 'none' }}
                   >
                     ログアウト
                   </Button>
@@ -99,7 +99,7 @@ export default function AppTheme({
                   href="/login"
                   variant="contained"
                   size="small"
-                  sx={{ textTransform: "none" }}
+                  sx={{ textTransform: 'none' }}
                 >
                   ログイン
                 </Button>
@@ -116,7 +116,7 @@ export default function AppTheme({
         {/* フッター */}
         <Box
           component="footer"
-          sx={{ py: 6, textAlign: "center", color: "text.secondary" }}
+          sx={{ py: 6, textAlign: 'center', color: 'text.secondary' }}
         >
           © {new Date().getFullYear()} VocabScan
         </Box>
