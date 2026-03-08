@@ -1,19 +1,36 @@
-'use client'
+"use client";
 
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
-  AppBar, Toolbar, Typography, Container, CssBaseline, Box,
-  ThemeProvider, createTheme, Tabs, Tab, Button
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  CssBaseline,
+  Box,
+  ThemeProvider,
+  createTheme,
+  Tabs,
+  Tab,
+  Button,
 } from "@mui/material";
-import { signOut } from '@/app/login/actions'
+import { signOut } from "@/features/auth/actions";
 
 const theme = createTheme({ palette: { mode: "dark" } });
 
 function LinkTab(props: { label: string; href: string; value: string }) {
   const { label, href, value } = props;
-  return <Tab component={Link} href={href} label={label} value={value} sx={{ textTransform: "none" }} />;
+  return (
+    <Tab
+      component={Link}
+      href={href}
+      label={label}
+      value={value}
+      sx={{ textTransform: "none" }}
+    />
+  );
 }
 
 export default function AppTheme({
@@ -24,11 +41,13 @@ export default function AppTheme({
   initialEmail: string | null;
 }) {
   const pathname = usePathname();
-  const current =
-    pathname.startsWith("/reader") ? "/reader" :
-      pathname.startsWith("/wordbooks") ? "/wordbooks" :
-        pathname === "/" ? "/" :
-          false;
+  const current = pathname.startsWith("/reader")
+    ? "/reader"
+    : pathname.startsWith("/wordbooks")
+      ? "/wordbooks"
+      : pathname === "/"
+        ? "/"
+        : false;
 
   return (
     <AppRouterCacheProvider options={{ key: "mui" }}>
@@ -44,7 +63,12 @@ export default function AppTheme({
             </Typography>
 
             {/* 中央：タブ */}
-            <Tabs value={current} textColor="primary" indicatorColor="primary" sx={{ ml: 2 }}>
+            <Tabs
+              value={current}
+              textColor="primary"
+              indicatorColor="primary"
+              sx={{ ml: 2 }}
+            >
               <LinkTab label="解析" href="/" value="/" />
               <LinkTab label="読み上げ" href="/reader" value="/reader" />
               <LinkTab label="単語帳" href="/wordbooks" value="/wordbooks" />
@@ -57,13 +81,26 @@ export default function AppTheme({
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               {initialEmail ? (
                 <>
-                  <Typography variant="body2" component="span">{initialEmail}</Typography>
-                  <Button onClick={signOut} variant="outlined" size="small" sx={{ textTransform: "none" }}>
+                  <Typography variant="body2" component="span">
+                    {initialEmail}
+                  </Typography>
+                  <Button
+                    onClick={signOut}
+                    variant="outlined"
+                    size="small"
+                    sx={{ textTransform: "none" }}
+                  >
                     ログアウト
                   </Button>
                 </>
               ) : (
-                <Button component={Link} href="/login" variant="contained" size="small" sx={{ textTransform: "none" }}>
+                <Button
+                  component={Link}
+                  href="/login"
+                  variant="contained"
+                  size="small"
+                  sx={{ textTransform: "none" }}
+                >
                   ログイン
                 </Button>
               )}
@@ -77,7 +114,10 @@ export default function AppTheme({
         </Container>
 
         {/* フッター */}
-        <Box component="footer" sx={{ py: 6, textAlign: "center", color: "text.secondary" }}>
+        <Box
+          component="footer"
+          sx={{ py: 6, textAlign: "center", color: "text.secondary" }}
+        >
           © {new Date().getFullYear()} VocabScan
         </Box>
       </ThemeProvider>

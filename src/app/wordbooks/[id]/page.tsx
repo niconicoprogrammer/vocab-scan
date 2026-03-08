@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { Box, Stack, Typography, Divider, Button } from "@mui/material";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import WordbookDetail from "@/app/wordbooks/[id]/_components/WordbookDetail";
+import WordbookDetail from "@/features/wordbooks/components/WordbookDetail";
 import { BreadcrumbsNavClientOnly } from "@/components/breadcrumbs-nav";
 import { Word } from "@/types/types";
 

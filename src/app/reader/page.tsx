@@ -11,9 +11,9 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
-import { useSpeechController } from "@/hooks/speech/useSpeechController";
-import SpeechPlayer from "@/components/speech-player/SpeechPlayer";
-import WordsPreview from "@/components/words-preview/WordsPreview";
+import { useSpeechController } from "@/features/speech/hooks/useSpeechController";
+import SpeechPlayer from "@/features/speech/components/SpeechPlayer";
+import WordsPreview from "@/features/wordbooks/components/WordsPreview";
 import { parseTsv } from "@/utils/tsv";
 import { Pair } from "@/types/types";
 

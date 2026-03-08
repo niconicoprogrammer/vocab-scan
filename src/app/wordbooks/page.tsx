@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import WordbookList from "@/app/wordbooks/_components/WordbooksList";
+import WordbookList from "@/features/wordbooks/components/WordbookList";
 import { BreadcrumbsNavClientOnly } from "@/components/breadcrumbs-nav";
 
 type Book = {

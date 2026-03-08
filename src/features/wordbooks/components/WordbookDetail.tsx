@@ -11,10 +11,10 @@ import {
   Alert,
   Grid,
 } from "@mui/material";
-import { replaceWords } from "@/app/wordbooks/[id]/actions";
-import { useSpeechController } from "@/hooks/speech/useSpeechController";
-import SpeechPlayer from "@/components/speech-player/SpeechPlayer";
-import WordsPreview from "@/components/words-preview/WordsPreview";
+import { replaceWords } from "@/features/wordbooks/actions_id";
+import { useSpeechController } from "@/features/speech/hooks/useSpeechController";
+import SpeechPlayer from "@/features/speech/components/SpeechPlayer";
+import WordsPreview from "@/features/wordbooks/components/WordsPreview";
 import { parseTsv, wordsToTsv } from "@/utils/tsv";
 import { Pair, Word } from "@/types/types";
 

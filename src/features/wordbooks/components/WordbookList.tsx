@@ -26,7 +26,7 @@ import {
   createWordbook,
   deleteWordbook,
   updateWordbook,
-} from "@/app/wordbooks/actions";
+} from "@/features/wordbooks/actions";
 
 type Book = { id: number; title: string; created_at: string };
 
