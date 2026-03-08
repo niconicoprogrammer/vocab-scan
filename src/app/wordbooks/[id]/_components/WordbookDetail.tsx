@@ -11,14 +11,14 @@ import {
   Alert,
   Grid,
 } from "@mui/material";
-import { replaceWords } from "./actions";
+import { replaceWords } from "@/app/wordbooks/[id]/actions";
 import { useSpeechController } from "@/hooks/speech/useSpeechController";
 import SpeechPlayer from "@/components/speech-player/SpeechPlayer";
 import WordsPreview from "@/components/words-preview/WordsPreview";
 import { parseTsv, wordsToTsv } from "@/utils/tsv";
 import { Pair, Word } from "@/types/types";
 
-export default function Client({
+export default function WordbookDetail({
   bookId,
   initialWords,
 }: {

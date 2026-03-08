@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { Box, Stack, Typography, Divider, Button } from "@mui/material";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import Client from "@/app/wordbooks/[id]/page_client";
+import WordbookDetail from "@/app/wordbooks/[id]/_components/WordbookDetail";
 import { BreadcrumbsNavClientOnly } from "@/components/breadcrumbs-nav";
 import { Word } from "@/types/types";
 
@@ -78,7 +78,7 @@ export default async function WordbookDetailPage({
 
         <Divider sx={{ mb: 2 }} />
 
-        <Client bookId={book.id} initialWords={words} />
+        <WordbookDetail bookId={book.id} initialWords={words} />
       </Box>
     </>
   );

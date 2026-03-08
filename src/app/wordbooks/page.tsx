@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import Client from "@/app/wordbooks/page_client";
+import WordbookList from "@/app/wordbooks/_components/WordbooksList";
 import { BreadcrumbsNavClientOnly } from "@/components/breadcrumbs-nav";
 
 type Book = {
@@ -40,7 +40,7 @@ export default async function WordbooksPage() {
   return (
     <>
       <BreadcrumbsNavClientOnly items={[{ label: "単語帳一覧" }]} />
-      <Client initialBooks={books} />
+      <WordbookList initialBooks={books} />
     </>
   );
 }
