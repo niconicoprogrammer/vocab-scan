@@ -29,7 +29,7 @@ import {
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { analyzeImage } from "@/app/actions";
+import { analyzeImage } from "@/features/scanner/actions";
 import { Pair, AnalyzeResult } from "@/types/types";
 
 /**
