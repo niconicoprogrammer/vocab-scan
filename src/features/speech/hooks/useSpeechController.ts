@@ -19,6 +19,7 @@ export function useSpeechController(
   },
   cfg: Cfg,
 ): TtsController {
+  const { rows, current, setCurrent, playing, setPlaying, loop } = deps;
   // ✅ cfg の最新値を保持する ref
   const cfgRef = useRef<Cfg>(cfg);
   useEffect(() => {
@@ -26,32 +27,36 @@ export function useSpeechController(
   }, [cfg]); // rate/pitch/gapSec/LANG/pickVoice すべて包含
 
   // 最新値を常に参照できるように ref 経由にする（controllerの再生成を防ぐ）
-  const rowsRef = useRef(deps.rows);
-  const currentRef = useRef(deps.current);
-  const playingRef = useRef(deps.playing);
+  const rowsRef = useRef(rows);
+  const currentRef = useRef(current);
+  const playingRef = useRef(playing);
+  const loopRef = useRef(loop);
 
   useEffect(() => {
-    rowsRef.current = deps.rows;
-  }, [deps.rows]);
+    rowsRef.current = rows;
+  }, [rows]);
   useEffect(() => {
-    currentRef.current = deps.current;
-  }, [deps.current]);
+    currentRef.current = current;
+  }, [current]);
   useEffect(() => {
-    playingRef.current = deps.playing;
-  }, [deps.playing]);
+    playingRef.current = playing;
+  }, [playing]);
+  useEffect(() => {
+    loopRef.current = loop;
+  }, [loop]);
 
   const ctrl = useMemo(
     () =>
       createSpeechController({
         getRows: () => rowsRef.current,
         getCurrent: () => currentRef.current,
-        setCurrent: deps.setCurrent,
+        setCurrent: setCurrent,
         getPlaying: () => playingRef.current,
-        setPlaying: deps.setPlaying,
-        getLoop: () => deps.loop,
+        setPlaying: setPlaying,
+        getLoop: () => loopRef.current,
         getCfg: () => cfgRef.current,
       }),
-    [deps.setCurrent, deps.setPlaying, deps.loop],
+    [setCurrent, setPlaying],
   );
 
   // 後片付け
